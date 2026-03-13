@@ -117,8 +117,8 @@ Page({
 
     // 绘制中心圆（渐变光泽效果）
     ctx.beginPath()
-    ctx.arc(centerX, centerY, 25, 0, 2 * Math.PI)
-    const centerGradient = ctx.createRadialGradient(centerX - 8, centerY - 8, 0, centerX, centerY, 25)
+    ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI)
+    const centerGradient = ctx.createRadialGradient(centerX - 6, centerY - 6, 0, centerX, centerY, 20)
     centerGradient.addColorStop(0, '#fff')
     centerGradient.addColorStop(1, '#e0e0e0')
     ctx.fillStyle = centerGradient
@@ -126,11 +126,11 @@ Page({
 
     // 绘制指针三角形（渐变效果）
     ctx.beginPath()
-    ctx.moveTo(centerX, centerY - radius - 35)
-    ctx.lineTo(centerX - 22, centerY - radius + 25)
-    ctx.lineTo(centerX + 22, centerY - radius + 25)
+    ctx.moveTo(centerX, centerY - radius - 30)
+    ctx.lineTo(centerX - 18, centerY - radius + 20)
+    ctx.lineTo(centerX + 18, centerY - radius + 20)
     ctx.closePath()
-    const pointerGradient = ctx.createLinearGradient(centerX, centerY - radius - 35, centerX, centerY - radius + 25)
+    const pointerGradient = ctx.createLinearGradient(centerX, centerY - radius - 30, centerX, centerY - radius + 20)
     pointerGradient.addColorStop(0, '#ff6b6b')
     pointerGradient.addColorStop(1, '#ee5a5a')
     ctx.fillStyle = pointerGradient

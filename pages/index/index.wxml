@@ -1,7 +1,7 @@
 <!--pages/index/index.wxml-->
 <view class="container">
   <view class="header">
-    <view class="title">🎲 抽个签吧</view>
+    <view class="title">🌟 抽个签吧</view>
     <view class="subtitle">选择你喜欢的抽签方式</view>
   </view>
 
@@ -9,7 +9,7 @@
     <view class="card-grid">
       <!-- 自定义抽签 -->
       <view class="card" bindtap="goToCustom">
-        <view class="card-icon">🌟</view>
+        <view class="card-icon">✏️</view>
         <view class="card-title">自定义抽签</view>
         <view class="card-desc">自由添加选项，设置权重</view>
         <view class="card-arrow">→</view>
@@ -17,7 +17,7 @@
 
       <!-- 转盘抽签 -->
       <view class="card" bindtap="goToWheel">
-        <view class="card-icon">🔥</view>
+        <view class="card-icon">🎡</view>
         <view class="card-title">转盘抽签</view>
         <view class="card-desc">旋转转盘，刺激有趣</view>
         <view class="card-arrow">→</view>
@@ -25,7 +25,7 @@
 
       <!-- 预设抽签 -->
       <view class="card" bindtap="goToPreset">
-        <view class="card-icon">💎</view>
+        <view class="card-icon">⭐</view>
         <view class="card-title">热门预设</view>
         <view class="card-desc">精选模板，快速使用</view>
         <view class="card-arrow">→</view>

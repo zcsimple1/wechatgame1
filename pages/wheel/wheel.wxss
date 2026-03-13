@@ -81,14 +81,14 @@
 
 .wheel-container {
   position: relative;
-  width: 560rpx;
-  height: 560rpx;
-  margin: 40rpx auto;
+  width: 450rpx;
+  height: 450rpx;
+  margin: 20rpx auto;
 }
 
 .wheel-canvas {
-  width: 560rpx;
-  height: 560rpx;
+  width: 450rpx;
+  height: 450rpx;
   border-radius: 50%;
 }
 
@@ -97,8 +97,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 160rpx;
-  height: 160rpx;
+  width: 130rpx;
+  height: 130rpx;
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
   border-radius: 50%;
   display: flex;
@@ -115,8 +115,9 @@
 
 .pointer-text {
   color: white;
-  font-size: 32rpx;
+  font-size: 28rpx;
   font-weight: bold;
+  line-height: 1;
 }
 
 .options-section {

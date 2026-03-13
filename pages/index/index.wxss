@@ -89,13 +89,14 @@
 
 .preset-list {
   display: flex;
-  gap: 20rpx;
+  gap: 15rpx;
   white-space: nowrap;
+  overflow-x: auto;
 }
 
 .preset-item {
   flex: 0 0 auto;
-  width: 180rpx;
+  width: 200rpx;
   text-align: center;
   background: #f8f9fa;
   border-radius: 16rpx;
