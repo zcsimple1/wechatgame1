@@ -442,9 +442,13 @@
       color: #333;
     }
 
-    .preset-arrow {
-      font-size: 16px;
-      color: #999;
+    .preset-tap {
+      padding: 4px 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
     }
 
     .preset-tags {
@@ -466,7 +470,7 @@
       color: #fff;
     }
 
-    /* 弹窗样式 */
+    /* 弹窗样式 - 优化版 */
     .modal-mask {
       position: fixed;
       top: 0;
@@ -486,11 +490,13 @@
 
     .modal-content {
       background: #fff;
-      border-radius: 12px;
-      padding: 30px 20px;
+      border-radius: 16px;
+      padding: 0;
       text-align: center;
       margin: 20px;
       animation: modalPop 0.3s ease;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     }
 
     @keyframes modalPop {
@@ -504,37 +510,100 @@
       }
     }
 
-    .result-icon {
-      font-size: 48px;
-      margin-bottom: 10px;
+    .result-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 20px 30px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .modal-result-title {
+    .result-background-icon {
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      font-size: 150px;
+      opacity: 0.15;
+      filter: blur(2px);
+    }
+
+    .result-subtitle {
+      position: relative;
+      z-index: 1;
       font-size: 14px;
-      color: #666;
-      margin-bottom: 15px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: bold;
+    }
+
+    .result-value-container {
+      padding: 40px 20px;
+      background: #fff;
+    }
+
+    .modal-result-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+      padding: 30px 20px;
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      border-radius: 12px;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 24px rgba(246, 211, 101, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-result-value::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 70%
+      );
+      animation: shine 2s infinite;
+    }
+
+    @keyframes shine {
+      0% {
+        transform: translateX(-100%) translateY(-100%);
+      }
+      100% {
+        transform: translateX(100%) translateY(100%);
+      }
     }
 
     .result-actions {
       display: flex;
       gap: 10px;
-      margin-top: 20px;
+      padding: 0 15px 20px;
     }
 
     .retry-btn,
     .confirm-btn {
       flex: 1;
-      height: 40px;
-      line-height: 40px;
-      border-radius: 20px;
+      height: 45px;
+      line-height: 45px;
+      border-radius: 23px;
       font-size: 14px;
       font-weight: bold;
       border: none;
-      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .retry-btn:active,
+    .confirm-btn:active {
+      transform: scale(0.95);
     }
 
     .retry-btn {
-      background: #f0f0f0;
+      background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
       color: #333;
     }
 
@@ -568,6 +637,12 @@
       font-size: 10px;
       z-index: 1000;
     }
+
+    /* 结果展示图标 */
+    .result-icon-large {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -577,7 +652,7 @@
     <!-- 首页 -->
     <div class="page active" id="page-home">
       <div class="header">
-        <div class="title">🎲 幸运抽签</div>
+        <div class="title">🎲 抽个签吧</div>
         <div class="subtitle">选择你喜欢的抽签方式</div>
       </div>
 
@@ -697,13 +772,21 @@
       </div>
     </div>
 
-    <!-- 结果弹窗 -->
+    <!-- 结果弹窗 - 优化版 -->
     <div class="modal-mask" id="resultModal">
       <div class="modal-content">
-        <div class="result-icon">🎉</div>
-        <div class="result-title">抽签结果</div>
-        <div class="result-value" id="modalResultValue"></div>
-        <button class="confirm-btn" style="width: 100%; margin-top: 20px;" onclick="closeModal()">确定</button>
+        <div class="result-header">
+          <div class="result-background-icon" id="modalBgIcon"></div>
+          <div class="result-subtitle" id="modalSubtitle"></div>
+        </div>
+        <div class="result-value-container">
+          <div class="result-icon-large" id="modalIcon">🎉</div>
+          <div class="modal-result-value" id="modalResultValue"></div>
+        </div>
+        <div class="result-actions">
+          <button class="retry-btn" id="retryBtn" onclick="retryDraw()">🔄 再来一次</button>
+          <button class="confirm-btn" onclick="closeModal()">✅ 确定</button>
+        </div>
       </div>
     </div>
 
@@ -746,7 +829,7 @@
       const preset = quickPresets.find(p => p.id === id);
       if (preset) {
         const result = preset.options[Math.floor(Math.random() * preset.options.length)];
-        showModalResult(result);
+        showModalResult(result, preset.name, preset.icon);
       }
     }
 
@@ -1032,6 +1115,7 @@
     ];
 
     let currentCategory = 'all';
+    let currentPreset = null;
 
     function initPresets() {
       const tabsContainer = document.getElementById('categoryTabs');
@@ -1060,7 +1144,7 @@
           <div class="preset-header">
             <div class="preset-icon">${p.icon}</div>
             <div class="preset-name">${p.name}</div>
-            <div class="preset-arrow">→</div>
+            <div class="preset-tap">点击抽签</div>
           </div>
           <div class="preset-tags">
             ${p.options.slice(0, 4).map(opt => `<span class="tag">${opt}</span>`).join('')}
@@ -1073,19 +1157,31 @@
     function selectPreset(id) {
       const preset = presets.find(p => p.id === id);
       if (preset) {
+        currentPreset = preset;
         const result = preset.options[Math.floor(Math.random() * preset.options.length)];
-        showModalResult(result);
+        showModalResult(result, preset.name, preset.icon);
       }
     }
 
-    // 结果弹窗
-    function showModalResult(result) {
+    // 结果弹窗 - 优化版
+    function showModalResult(result, title, icon) {
       document.getElementById('modalResultValue').textContent = result;
+      document.getElementById('modalSubtitle').textContent = title;
+      document.getElementById('modalBgIcon').textContent = icon;
+      document.getElementById('modalIcon').textContent = icon;
       document.getElementById('resultModal').classList.add('show');
+      document.getElementById('retryBtn').style.display = 'inline-block';
     }
 
     function closeModal() {
       document.getElementById('resultModal').classList.remove('show');
+    }
+
+    function retryDraw() {
+      if (currentPreset) {
+        const result = currentPreset.options[Math.floor(Math.random() * currentPreset.options.length)];
+        document.getElementById('modalResultValue').textContent = result;
+      }
     }
 
     // 初始化

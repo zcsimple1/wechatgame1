@@ -140,6 +140,10 @@
   animation: modalPop 0.3s ease;
 }
 
+.modal-mask:active {
+  pointer-events: auto;
+}
+
 @keyframes modalPop {
   from {
     transform: scale(0.8);

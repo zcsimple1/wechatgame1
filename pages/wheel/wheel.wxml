@@ -18,7 +18,7 @@
     <view class="wheel-container">
       <canvas type="2d" id="wheelCanvas" class="wheel-canvas"></canvas>
       <view class="wheel-pointer" bindtap="spinWheel">
-        <view class="pointer-text">开始</view>
+        <view class="pointer-text">{{isSpinning ? '点击停止' : '开始'}}</view>
       </view>
     </view>
 

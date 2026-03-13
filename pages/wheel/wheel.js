@@ -8,8 +8,9 @@ Page({
     result: '',
     canvas: null,
     ctx: null,
-    colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'],
-    currentRotation: 0
+    colors: ['#FF6B6B', '#FF8E53', '#FFA07A', '#FFD93D', '#6BCF7F', '#4ECDC4', '#45B7D1', '#9B59B6', '#FF69B4', '#FF7F50', '#20B2AA', '#00CED1'],
+    currentRotation: 0,
+    canStop: false
   },
 
   onLoad() {
@@ -82,6 +83,20 @@ Page({
       ctx.fillStyle = option.color || this.data.colors[index % this.data.colors.length]
       ctx.fill()
 
+      // 添加光泽效果
+      const gradient = ctx.createRadialGradient(
+        centerX + radius * 0.3 * Math.cos(startAngle + anglePerSlice / 2),
+        centerY + radius * 0.3 * Math.sin(startAngle + anglePerSlice / 2),
+        0,
+        centerX,
+        centerY,
+        radius
+      )
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)')
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+      ctx.fillStyle = gradient
+      ctx.fill()
+
       // 绘制边框
       ctx.strokeStyle = '#fff'
       ctx.lineWidth = 2
@@ -100,20 +115,29 @@ Page({
 
     ctx.restore()
 
-    // 绘制中心圆
+    // 绘制中心圆（渐变光泽效果）
     ctx.beginPath()
-    ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI)
-    ctx.fillStyle = '#fff'
+    ctx.arc(centerX, centerY, 25, 0, 2 * Math.PI)
+    const centerGradient = ctx.createRadialGradient(centerX - 8, centerY - 8, 0, centerX, centerY, 25)
+    centerGradient.addColorStop(0, '#fff')
+    centerGradient.addColorStop(1, '#e0e0e0')
+    ctx.fillStyle = centerGradient
     ctx.fill()
 
-    // 绘制指针三角形
+    // 绘制指针三角形（渐变效果）
     ctx.beginPath()
-    ctx.moveTo(centerX, centerY - radius - 30)
-    ctx.lineTo(centerX - 20, centerY - radius + 20)
-    ctx.lineTo(centerX + 20, centerY - radius + 20)
+    ctx.moveTo(centerX, centerY - radius - 35)
+    ctx.lineTo(centerX - 22, centerY - radius + 25)
+    ctx.lineTo(centerX + 22, centerY - radius + 25)
     ctx.closePath()
-    ctx.fillStyle = '#ff6b6b'
+    const pointerGradient = ctx.createLinearGradient(centerX, centerY - radius - 35, centerX, centerY - radius + 25)
+    pointerGradient.addColorStop(0, '#ff6b6b')
+    pointerGradient.addColorStop(1, '#ee5a5a')
+    ctx.fillStyle = pointerGradient
     ctx.fill()
+    ctx.strokeStyle = '#fff'
+    ctx.lineWidth = 2
+    ctx.stroke()
   },
 
   goBack() {
@@ -179,7 +203,11 @@ Page({
   },
 
   spinWheel() {
-    if (this.data.isSpinning) return
+    if (this.data.isSpinning) {
+      // 如果正在旋转，则停止
+      this.stopWheel()
+      return
+    }
 
     if (this.data.options.length < 2) {
       wx.showToast({
@@ -191,7 +219,8 @@ Page({
 
     this.setData({
       isSpinning: true,
-      showResult: false
+      showResult: false,
+      canStop: true
     })
 
     // 随机选择结果
@@ -207,6 +236,7 @@ Page({
     const duration = 3000
     const startTime = Date.now()
     const startRotation = this.data.currentRotation
+    let stopped = false
 
     const animate = () => {
       const elapsed = Date.now() - startTime
@@ -222,7 +252,7 @@ Page({
 
       this.drawWheel()
 
-      if (progress < 1) {
+      if (progress < 1 && !stopped) {
         setTimeout(animate, 16)
       } else {
         // 动画结束
@@ -230,7 +260,8 @@ Page({
         this.setData({
           isSpinning: false,
           showResult: true,
-          result
+          result,
+          canStop: false
         })
 
         wx.vibrateShort({
@@ -240,6 +271,33 @@ Page({
     }
 
     animate()
+  },
+
+  stopWheel() {
+    if (!this.data.isSpinning || !this.data.canStop) return
+
+    // 停止旋转，计算当前指向的选项
+    const { currentRotation, options } = this.data
+    const anglePerSlice = (2 * Math.PI) / options.length
+
+    // 规范化角度到 [0, 2*PI)
+    const normalizedRotation = ((-currentRotation) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI)
+
+    // 计算指针指向的选项（指针在顶部，即 -PI/2 位置）
+    const pointerAngle = (3 * Math.PI / 2 - normalizedRotation + 2 * Math.PI) % (2 * Math.PI)
+    const resultIndex = Math.floor(pointerAngle / anglePerSlice) % options.length
+
+    const result = options[resultIndex].name
+    this.setData({
+      isSpinning: false,
+      showResult: true,
+      result,
+      canStop: false
+    })
+
+    wx.vibrateShort({
+      type: 'heavy'
+    })
   },
 
   closeResult() {
