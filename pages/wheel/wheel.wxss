@@ -84,12 +84,14 @@
   width: 450rpx;
   height: 450rpx;
   margin: 20rpx auto;
+  overflow: visible;
 }
 
 .wheel-canvas {
   width: 450rpx;
   height: 450rpx;
   border-radius: 50%;
+  display: block;
 }
 
 .wheel-pointer {
@@ -189,6 +191,11 @@
   color: #fff;
   margin-bottom: 15rpx;
   text-shadow: 2rpx 2rpx 4rpx rgba(0, 0, 0, 0.2);
+}
+
+.result-icon {
+  font-size: 96rpx;
+  margin-bottom: 20rpx;
 }
 
 .close-result-btn {

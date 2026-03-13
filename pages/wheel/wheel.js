@@ -6,6 +6,7 @@ Page({
     isSpinning: false,
     showResult: false,
     result: '',
+    resultIcon: '',
     canvas: null,
     ctx: null,
     colors: ['#FF6B6B', '#FF8E53', '#FFA07A', '#FFD93D', '#6BCF7F', '#4ECDC4', '#45B7D1', '#9B59B6', '#FF69B4', '#FF7F50', '#20B2AA', '#00CED1'],
@@ -256,11 +257,12 @@ Page({
         setTimeout(animate, 16)
       } else {
         // 动画结束
-        const result = this.data.options[randomIndex].name
+        const resultOption = this.data.options[randomIndex]
         this.setData({
           isSpinning: false,
           showResult: true,
-          result,
+          result: resultOption.name,
+          resultIcon: resultOption.name.charAt(0) === '1' || resultOption.name.charAt(0) === '2' ? resultOption.name.charAt(0) + '️⃣' : '',
           canStop: false
         })
 
@@ -303,7 +305,8 @@ Page({
   closeResult() {
     this.setData({
       showResult: false,
-      result: ''
+      result: '',
+      resultIcon: ''
     })
   },
 

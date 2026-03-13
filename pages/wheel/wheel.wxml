@@ -38,6 +38,7 @@
 
     <view class="result-section" wx:if="{{showResult}}">
       <view class="result-title">🎉 转盘结果</view>
+      <view class="result-icon" wx:if="{{resultIcon}}">{{resultIcon}}</view>
       <view class="result-value">{{result}}</view>
       <button class="close-result-btn" bindtap="closeResult" size="mini">关闭</button>
     </view>

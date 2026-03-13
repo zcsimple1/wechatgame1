@@ -141,10 +141,6 @@
   position: relative;
 }
 
-.modal-mask:active {
-  pointer-events: auto;
-}
-
 @keyframes modalPop {
   from {
     transform: scale(0.8);
