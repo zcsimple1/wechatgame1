@@ -12,7 +12,9 @@
       "outputPath": ""
     },
     "useCompilerPlugins": false,
-    "minifyWXML": true
+    "minifyWXML": true,
+    "ignoreUploadUnusedFiles": true,
+    "packNpmManually": false
   },
   "compileType": "miniprogram",
   "simulatorPluginLibVersion": {},
