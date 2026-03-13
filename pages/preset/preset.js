@@ -19,14 +19,14 @@ Page({
         id: 'yes-no',
         category: 'decision',
         name: '是或否',
-        icon: '❓',
+        icon: '🎯',
         options: [{ name: '是', icon: '✅' }, { name: '否', icon: '❌' }]
       },
       {
         id: 'yes-no-maybe',
         category: 'decision',
         name: '是或否或也许',
-        icon: '❓',
+        icon: '🎰',
         options: [{ name: '是', icon: '✅' }, { name: '否', icon: '❌' }, { name: '也许', icon: '❓' }]
       },
       {

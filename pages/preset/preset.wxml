@@ -26,7 +26,7 @@
           <view class="preset-arrow">→</view>
         </view>
         <view class="preset-tags">
-          <view class="tag" wx:for="{{item.options.slice(0, 4)}}" wx:for-item="opt" wx:key="*this">{{opt}}</view>
+          <view class="tag" wx:for="{{item.options.slice(0, 4)}}" wx:for-item="opt" wx:key="*this">{{opt.name}}</view>
           <view class="tag more" wx:if="{{item.options.length > 4}}">+{{item.options.length - 4}}</view>
         </view>
       </view>
