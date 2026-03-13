@@ -1,0 +1,42 @@
+<!--pages/share/share.wxml-->
+<view class="container">
+  <view class="header">
+    <view class="title">🎲 抽签分享</view>
+    <view class="subtitle">快来试试你的运气吧！</view>
+  </view>
+
+  <view class="content">
+    <view class="options-preview">
+      <view class="preview-title">选项列表</view>
+      <view class="preview-list">
+        <view class="preview-item" wx:for="{{options}}" wx:key="index">
+          <view class="preview-index">{{index + 1}}</view>
+          <view class="preview-name">{{item.name}}</view>
+          <view class="preview-weight">权重: {{item.weight || 1}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="draw-area" wx:if="{{showResult}}">
+      <view class="result-title">🎉 抽签结果</view>
+      <view class="result-value">{{result}}</view>
+    </view>
+
+    <view class="draw-area" wx:else>
+      <view class="draw-hint">点击下方按钮开始抽签</view>
+    </view>
+  </view>
+
+  <view class="actions">
+    <button class="share-btn" open-type="share" size="default">
+      分享给好友
+    </button>
+    <button class="draw-btn" bindtap="startDraw" disabled="{{isDrawing}}">
+      {{isDrawing ? '抽签中...' : '开始抽签'}}
+    </button>
+  </view>
+
+  <view class="creator">
+    由 {{creator}} 创建
+  </view>
+</view>
