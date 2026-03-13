@@ -31,6 +31,16 @@ Page({
     })
   },
 
+  shareApp() {
+    wx.showShareMenu({
+      withShareTicket: true
+    })
+    wx.showToast({
+      title: '请点击右上角分享',
+      icon: 'none'
+    })
+  },
+
   quickDraw(e) {
     const id = e.currentTarget.dataset.id
     const preset = this.data.quickPresets.find(p => p.id === id)
