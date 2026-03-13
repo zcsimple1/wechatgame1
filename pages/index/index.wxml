@@ -48,7 +48,7 @@
           <view class="preset-icon">{{item.icon}}</view>
           <view class="preset-name">{{item.name}}</view>
         </view>
-      </scroll-view>
+      </view>
     </view>
   </view>
 
