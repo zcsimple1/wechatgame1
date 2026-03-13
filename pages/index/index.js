@@ -2,12 +2,49 @@
 Page({
   data: {
     quickPresets: [
-      { id: 'yes-no', name: '是或否', icon: '❓', options: ['是', '否'] },
-      { id: 'lunch', name: '吃什么', icon: '🍜', options: ['火锅', '烧烤', '寿司', '披萨', '汉堡', '炒菜'] },
-      { id: 'weekend', name: '去哪玩', icon: '🎡', options: ['看电影', '逛街', '公园', '宅家', 'KTV', '运动'] },
-      { id: 'lucky', name: '幸运数字', icon: '🔢', options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-      { id: 'mood', name: '心情如何', icon: '😊', options: ['开心', '平静', '兴奋', '放松', '期待'] },
-      { id: 'color', name: '选个颜色', icon: '🎨', options: ['红色', '蓝色', '绿色', '黄色', '紫色'] }
+      { id: 'yes-no', name: '是或否', icon: '🎯', options: [{ name: '是', icon: '✅' }, { name: '否', icon: '❌' }] },
+      { id: 'lunch', name: '吃什么', icon: '🍜', options: [
+        { name: '火锅', icon: '🍲' },
+        { name: '烧烤', icon: '🍢' },
+        { name: '寿司', icon: '🍣' },
+        { name: '披萨', icon: '🍕' },
+        { name: '汉堡', icon: '🍔' },
+        { name: '炒菜', icon: '🥘' }
+      ] },
+      { id: 'weekend', name: '去哪玩', icon: '🎡', options: [
+        { name: '看电影', icon: '🎬' },
+        { name: '逛街', icon: '🛍️' },
+        { name: '公园', icon: '🌳' },
+        { name: '宅家', icon: '🏠' },
+        { name: 'KTV', icon: '🎤' },
+        { name: '运动', icon: '🏃' }
+      ] },
+      { id: 'lucky', name: '幸运数字', icon: '🔢', options: [
+        { name: '1', icon: '1️⃣' },
+        { name: '2', icon: '2️⃣' },
+        { name: '3', icon: '3️⃣' },
+        { name: '4', icon: '4️⃣' },
+        { name: '5', icon: '5️⃣' },
+        { name: '6', icon: '6️⃣' },
+        { name: '7', icon: '7️⃣' },
+        { name: '8', icon: '8️⃣' },
+        { name: '9', icon: '9️⃣' },
+        { name: '10', icon: '🔟' }
+      ] },
+      { id: 'mood', name: '心情如何', icon: '😊', options: [
+        { name: '开心', icon: '😄' },
+        { name: '平静', icon: '😌' },
+        { name: '兴奋', icon: '🤩' },
+        { name: '放松', icon: '😎' },
+        { name: '期待', icon: '🥰' }
+      ] },
+      { id: 'color', name: '选个颜色', icon: '🎨', options: [
+        { name: '红色', icon: '🔴' },
+        { name: '蓝色', icon: '🔵' },
+        { name: '绿色', icon: '🟢' },
+        { name: '黄色', icon: '🟡' },
+        { name: '紫色', icon: '🟣' }
+      ] }
     ],
     showResult: false,
     result: ''
