@@ -2,9 +2,9 @@
   "setting": {
     "es6": true,
     "postcss": true,
-    "minified": true,
+    "minified": false,
     "uglifyFileName": false,
-    "enhance": true,
+    "enhance": false,
     "packNpmRelationList": [],
     "babelSetting": {
       "ignore": [],
@@ -12,9 +12,11 @@
       "outputPath": ""
     },
     "useCompilerPlugins": false,
-    "minifyWXML": true,
+    "minifyWXML": false,
     "ignoreUploadUnusedFiles": true,
-    "packNpmManually": false
+    "packNpmManually": false,
+    "condition": false,
+    "nodeModules": false
   },
   "compileType": "miniprogram",
   "simulatorPluginLibVersion": {},
