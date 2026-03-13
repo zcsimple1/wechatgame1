@@ -1,7 +1,7 @@
 <!--pages/index/index.wxml-->
 <view class="container">
   <view class="header">
-    <view class="title">🌟 抽个签吧</view>
+    <view class="title">✨ 抽个签吧</view>
     <view class="subtitle">纠结症的福音，帮你做决定</view>
   </view>
 

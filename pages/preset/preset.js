@@ -4,6 +4,7 @@ Page({
     currentCategory: 'all',
     showResult: false,
     result: '',
+    resultIcon: '',
     currentPreset: {},
     categories: [
       { id: 'all', name: '全部' },
@@ -19,98 +20,192 @@ Page({
         category: 'decision',
         name: '是或否',
         icon: '❓',
-        options: ['是', '否']
+        options: [{ name: '是', icon: '✅' }, { name: '否', icon: '❌' }]
       },
       {
         id: 'yes-no-maybe',
         category: 'decision',
         name: '是或否或也许',
         icon: '❓',
-        options: ['是', '否', '也许']
+        options: [{ name: '是', icon: '✅' }, { name: '否', icon: '❌' }, { name: '也许', icon: '❓' }]
       },
       {
         id: 'lunch',
         category: 'food',
         name: '今天吃什么',
         icon: '🍜',
-        options: ['火锅', '烧烤', '寿司', '披萨', '汉堡', '炒菜', '面食', '砂锅']
+        options: [
+          { name: '火锅', icon: '🍲' },
+          { name: '烧烤', icon: '🍢' },
+          { name: '寿司', icon: '🍣' },
+          { name: '披萨', icon: '🍕' },
+          { name: '汉堡', icon: '🍔' },
+          { name: '炒菜', icon: '🥘' },
+          { name: '面食', icon: '🍜' },
+          { name: '砂锅', icon: '🍲' }
+        ]
       },
       {
         id: 'drink',
         category: 'food',
         name: '喝什么',
         icon: '🥤',
-        options: ['奶茶', '咖啡', '果汁', '苏打水', '可乐', '矿泉水']
+        options: [
+          { name: '奶茶', icon: '🧋' },
+          { name: '咖啡', icon: '☕' },
+          { name: '果汁', icon: '🧃' },
+          { name: '苏打水', icon: '🥤' },
+          { name: '可乐', icon: '🥤' },
+          { name: '矿泉水', icon: '💧' }
+        ]
       },
       {
         id: 'weekend',
         category: 'entertainment',
         name: '周末去哪玩',
         icon: '🎡',
-        options: ['看电影', '逛街', '公园', '宅家', 'KTV', '运动', '爬山', '桌游']
+        options: [
+          { name: '看电影', icon: '🎬' },
+          { name: '逛街', icon: '🛍️' },
+          { name: '公园', icon: '🌳' },
+          { name: '宅家', icon: '🏠' },
+          { name: 'KTV', icon: '🎤' },
+          { name: '运动', icon: '🏃' },
+          { name: '爬山', icon: '⛰️' },
+          { name: '桌游', icon: '🎲' }
+        ]
       },
       {
         id: 'movie',
         category: 'entertainment',
         name: '看什么电影',
         icon: '🎬',
-        options: ['动作片', '喜剧片', '恐怖片', '科幻片', '爱情片', '纪录片']
+        options: [
+          { name: '动作片', icon: '🎯' },
+          { name: '喜剧片', icon: '😂' },
+          { name: '恐怖片', icon: '👻' },
+          { name: '科幻片', icon: '🚀' },
+          { name: '爱情片', icon: '💕' },
+          { name: '纪录片', icon: '📹' }
+        ]
       },
       {
         id: 'lucky-number',
         category: 'game',
         name: '幸运数字',
         icon: '🔢',
-        options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+        options: [
+          { name: '1', icon: '1️⃣' },
+          { name: '2', icon: '2️⃣' },
+          { name: '3', icon: '3️⃣' },
+          { name: '4', icon: '4️⃣' },
+          { name: '5', icon: '5️⃣' },
+          { name: '6', icon: '6️⃣' },
+          { name: '7', icon: '7️⃣' },
+          { name: '8', icon: '8️⃣' },
+          { name: '9', icon: '9️⃣' },
+          { name: '10', icon: '🔟' }
+        ]
       },
       {
         id: 'dice',
         category: 'game',
         name: '掷骰子',
         icon: '🎲',
-        options: ['1点', '2点', '3点', '4点', '5点', '6点']
+        options: [
+          { name: '1点', icon: '1️⃣' },
+          { name: '2点', icon: '2️⃣' },
+          { name: '3点', icon: '3️⃣' },
+          { name: '4点', icon: '4️⃣' },
+          { name: '5点', icon: '5️⃣' },
+          { name: '6点', icon: '6️⃣' }
+        ]
       },
       {
         id: 'mood',
         category: 'life',
         name: '今天心情',
         icon: '😊',
-        options: ['开心', '平静', '兴奋', '放松', '期待', '焦虑', '疲惫']
+        options: [
+          { name: '开心', icon: '😄' },
+          { name: '平静', icon: '😌' },
+          { name: '兴奋', icon: '🤩' },
+          { name: '放松', icon: '😎' },
+          { name: '期待', icon: '🥰' },
+          { name: '焦虑', icon: '😰' },
+          { name: '疲惫', icon: '😴' }
+        ]
       },
       {
         id: 'color',
         category: 'life',
         name: '选个颜色',
         icon: '🎨',
-        options: ['红色', '橙色', '黄色', '绿色', '蓝色', '紫色']
+        options: [
+          { name: '红色', icon: '🔴' },
+          { name: '橙色', icon: '🟠' },
+          { name: '黄色', icon: '🟡' },
+          { name: '绿色', icon: '🟢' },
+          { name: '蓝色', icon: '🔵' },
+          { name: '紫色', icon: '🟣' }
+        ]
       },
       {
         id: 'gift',
         category: 'life',
         name: '送什么礼物',
         icon: '🎁',
-        options: ['鲜花', '巧克力', '香水', '手表', '项链', '书籍']
+        options: [
+          { name: '鲜花', icon: '💐' },
+          { name: '巧克力', icon: '🍫' },
+          { name: '香水', icon: '🧴' },
+          { name: '手表', icon: '⌚' },
+          { name: '项链', icon: '📿' },
+          { name: '书籍', icon: '📚' }
+        ]
       },
       {
         id: 'exercise',
         category: 'entertainment',
         name: '做什么运动',
         icon: '🏃',
-        options: ['跑步', '游泳', '瑜伽', '健身', '篮球', '羽毛球', '骑行']
+        options: [
+          { name: '跑步', icon: '🏃' },
+          { name: '游泳', icon: '🏊' },
+          { name: '瑜伽', icon: '🧘' },
+          { name: '健身', icon: '💪' },
+          { name: '篮球', icon: '🏀' },
+          { name: '羽毛球', icon: '🏸' },
+          { name: '骑行', icon: '🚴' }
+        ]
       },
       {
         id: 'snack',
         category: 'food',
         name: '吃什么零食',
         icon: '🍪',
-        options: ['薯片', '饼干', '糖果', '坚果', '果干', '巧克力']
+        options: [
+          { name: '薯片', icon: '🥔' },
+          { name: '饼干', icon: '🍪' },
+          { name: '糖果', icon: '🍬' },
+          { name: '坚果', icon: '🥜' },
+          { name: '果干', icon: '🍎' },
+          { name: '巧克力', icon: '🍫' }
+        ]
       },
       {
         id: 'tea',
         category: 'food',
         name: '喝什么茶',
         icon: '🍵',
-        options: ['红茶', '绿茶', '乌龙茶', '花茶', '普洱茶', '白茶']
+        options: [
+          { name: '红茶', icon: '🍵' },
+          { name: '绿茶', icon: '🍵' },
+          { name: '乌龙茶', icon: '🍵' },
+          { name: '花茶', icon: '🌸' },
+          { name: '普洱茶', icon: '🍵' },
+          { name: '白茶', icon: '🍵' }
+        ]
       }
     ],
     filteredPresets: []

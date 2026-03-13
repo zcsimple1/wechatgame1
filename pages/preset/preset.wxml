@@ -42,7 +42,7 @@
         <view class="result-title">{{currentPreset.name}}</view>
       </view>
       <view class="result-value-container">
-        <view class="result-icon-large">{{currentPreset.icon}}</view>
+        <view class="result-icon-large">{{resultIcon}}</view>
         <view class="result-text">{{result}}</view>
       </view>
       <view class="result-actions">
