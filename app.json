@@ -12,6 +12,7 @@
     "navigationBarTitleText": "幸运抽签",
     "navigationBarTextStyle": "white"
   },
+  "version": "1.1.0",
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }
