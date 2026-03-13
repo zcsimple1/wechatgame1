@@ -6,7 +6,8 @@ Page({
     newWeight: '',
     isDrawing: false,
     showResult: false,
-    result: ''
+    result: '',
+    shareType: 'wheel' // wheel 或 list
   },
 
   onLoad() {
@@ -171,6 +172,13 @@ Page({
     })
   },
 
+  selectShareType(e) {
+    const type = e.currentTarget.dataset.type
+    this.setData({
+      shareType: type
+    })
+  },
+
   sharePage() {
     if (this.data.options.length < 2) {
       wx.showToast({
@@ -180,11 +188,30 @@ Page({
       return
     }
 
-    // 将选项信息编码后跳转到分享页
+    // 根据分享类型跳转到不同的页面
     const optionsData = JSON.stringify(this.data.options)
-    wx.navigateTo({
-      url: `/pages/share/share?options=${encodeURIComponent(optionsData)}`
-    })
+
+    if (this.data.shareType === 'wheel') {
+      // 圆盘式 - 跳转到 wheel 页面
+      // 先保存选项到本地存储
+      wx.setStorageSync('wheelOptions', this.data.options.map(opt => ({
+        name: opt.name,
+        color: this.getRandomColor()
+      })))
+      wx.navigateTo({
+        url: `/pages/wheel/wheel`
+      })
+    } else {
+      // 列表式 - 跳转到 share 页面
+      wx.navigateTo({
+        url: `/pages/share/share?options=${encodeURIComponent(optionsData)}`
+      })
+    }
+  },
+
+  getRandomColor() {
+    const colors = ['#FF6B6B', '#FF8E53', '#FFA07A', '#FFD93D', '#6BCF7F', '#4ECDC4', '#45B7D1', '#9B59B6', '#FF69B4', '#FF7F50', '#20B2AA', '#00CED1']
+    return colors[Math.floor(Math.random() * colors.length)]
   },
 
   onShareAppMessage() {

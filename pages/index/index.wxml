@@ -7,11 +7,11 @@
 
   <view class="content">
     <view class="card-grid">
-      <!-- 自定义抽签 -->
-      <view class="card" bindtap="goToCustom">
-        <view class="card-icon">✏️</view>
-        <view class="card-title">自定义抽签</view>
-        <view class="card-desc">自由添加选项，设置权重</view>
+      <!-- 热门预设 -->
+      <view class="card" bindtap="goToPreset">
+        <view class="card-icon">⭐</view>
+        <view class="card-title">热门预设</view>
+        <view class="card-desc">精选模板，快速使用</view>
         <view class="card-arrow">→</view>
       </view>
 
@@ -23,11 +23,11 @@
         <view class="card-arrow">→</view>
       </view>
 
-      <!-- 预设抽签 -->
-      <view class="card" bindtap="goToPreset">
-        <view class="card-icon">⭐</view>
-        <view class="card-title">热门预设</view>
-        <view class="card-desc">精选模板，快速使用</view>
+      <!-- 自定义抽签 -->
+      <view class="card" bindtap="goToCustom">
+        <view class="card-icon">✏️</view>
+        <view class="card-title">自定义抽签</view>
+        <view class="card-desc">自由添加选项，设置权重</view>
         <view class="card-arrow">→</view>
       </view>
 
@@ -55,9 +55,18 @@
   <!-- 抽签结果弹窗 -->
   <view class="modal-mask" wx:if="{{showResult}}" bindtap="closeResult">
     <view class="modal-content" catchtap>
-      <view class="result-icon">🎉</view>
-      <view class="result-title">抽签结果</view>
-      <view class="result-value">{{result}}</view>
+      <view class="close-icon-btn" catchtap="closeResult">✕</view>
+      <view class="result-header">
+        <view class="result-background-icon">{{currentPreset.icon}}</view>
+        <view class="result-title-light">{{currentPreset.name}}</view>
+      </view>
+      <view class="result-value-container">
+        <view class="result-icon-large">{{resultIcon}}</view>
+        <view class="result-text">{{result}}</view>
+      </view>
+      <view class="result-actions">
+        <button class="retry-btn" catchtap="retryDraw">🔄 再来一次</button>
+      </view>
     </view>
   </view>
 </view>

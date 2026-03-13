@@ -264,36 +264,23 @@ Page({
       return
     }
 
-    // 动画效果
-    let count = 0
-    const maxCount = 20
-    const interval = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * options.length)
-      this.setData({
-        result: options[randomIndex],
-        showResult: true
-      })
-
-      count++
-      if (count >= maxCount) {
-        clearInterval(interval)
-        this.finalDraw()
-      }
-    }, 100)
-  },
-
-  finalDraw() {
-    const { currentPreset } = this.data
-    const options = currentPreset.options
+    // 直接随机选择并显示结果
     const randomIndex = Math.floor(Math.random() * options.length)
+    const result = options[randomIndex]
 
     this.setData({
-      result: options[randomIndex]
+      result: result.name,
+      resultIcon: result.icon,
+      showResult: true
     })
 
     wx.vibrateShort({
       type: 'heavy'
     })
+  },
+
+  finalDraw() {
+    // 已不再使用，保留以防兼容性问题
   },
 
   retryDraw() {
@@ -303,8 +290,13 @@ Page({
   closeResult() {
     this.setData({
       showResult: false,
-      result: ''
+      result: '',
+      resultIcon: ''
     })
+  },
+
+  stopPropagation() {
+    // 阻止事件冒泡，防止点击内容区关闭弹出框
   },
 
   onShareAppMessage() {

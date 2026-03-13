@@ -42,9 +42,24 @@
   </view>
 
   <view class="actions">
-    <button class="share-btn" bindtap="sharePage" disabled="{{options.length < 2}}">生成分享页</button>
-    <button class="draw-btn" bindtap="startDraw" disabled="{{isDrawing || options.length < 2}}" loading="{{isDrawing}}">
-      {{isDrawing ? '抽签中...' : '开始抽签'}}
-    </button>
+    <view class="share-options">
+      <view class="share-option-label">分享样式：</view>
+      <view class="share-type-selector">
+        <view class="share-type {{shareType === 'wheel' ? 'active' : ''}}" bindtap="selectShareType" data-type="wheel">
+          <view class="share-type-icon">🎡</view>
+          <view class="share-type-name">圆盘式</view>
+        </view>
+        <view class="share-type {{shareType === 'list' ? 'active' : ''}}" bindtap="selectShareType" data-type="list">
+          <view class="share-type-icon">📋</view>
+          <view class="share-type-name">列表式</view>
+        </view>
+      </view>
+    </view>
+    <view class="action-buttons">
+      <button class="share-btn" bindtap="sharePage" disabled="{{options.length < 2}}">生成分享页</button>
+      <button class="draw-btn" bindtap="startDraw" disabled="{{isDrawing || options.length < 2}}" loading="{{isDrawing}}">
+        {{isDrawing ? '抽签中...' : '开始抽签'}}
+      </button>
+    </view>
   </view>
 </view>

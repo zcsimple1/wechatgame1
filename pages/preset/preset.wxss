@@ -126,6 +126,16 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-content {
@@ -157,6 +167,7 @@
   padding: 50rpx 40rpx 40rpx;
   position: relative;
   overflow: hidden;
+  border-radius: 32rpx 32rpx 0 0;
 }
 
 .result-background-icon {

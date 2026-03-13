@@ -1,42 +1,73 @@
 <!--pages/share/share.wxml-->
 <view class="container">
   <view class="header">
-    <view class="title">🎲 抽签分享</view>
-    <view class="subtitle">快来试试你的运气吧！</view>
+    <view class="title">{{displayMode === 'wheel' ? '🎲 转盘抽签' : '📋 列表抽签'}}</view>
+    <view class="subtitle">{{displayMode === 'wheel' ? '点击转盘开始抽奖！' : '点击下方按钮开始抽签！'}}</view>
   </view>
 
-  <view class="content">
-    <view class="options-preview">
-      <view class="preview-title">选项列表</view>
-      <view class="preview-list">
-        <view class="preview-item" wx:for="{{options}}" wx:key="index">
-          <view class="preview-index">{{index + 1}}</view>
-          <view class="preview-name">{{item.name}}</view>
-          <view class="preview-weight">权重: {{item.weight || 1}}</view>
-        </view>
+  <!-- 圆盘模式 -->
+  <view class="wheel-section" wx:if="{{displayMode === 'wheel'}}">
+    <view class="wheel-container {{showResult ? 'modal-open' : ''}}">
+      <canvas type="2d" id="wheelCanvas" class="wheel-canvas" style="{{showResult ? 'opacity: 0; visibility: hidden;' : ''}}"></canvas>
+      <view class="wheel-pointer" bindtap="spinWheel" style="{{showResult ? 'opacity: 0; visibility: hidden;' : ''}}">
+        <view class="pointer-text">{{isSpinning ? '点击停止' : '点击开始'}}</view>
       </view>
     </view>
+  </view>
 
+  <!-- 列表模式 - 抽签按钮 -->
+  <view class="draw-section" wx:if="{{displayMode === 'list'}}">
     <view class="draw-area" wx:if="{{showResult}}">
       <view class="result-title">🎉 抽签结果</view>
       <view class="result-value">{{result}}</view>
+      <button class="close-result-btn" catchtap="closeResult" size="mini">关闭</button>
     </view>
+    <button class="draw-button" wx:else bindtap="spinWheel" disabled="{{isSpinning}}" loading="{{isSpinning}}">
+      {{isSpinning ? '抽签中...' : '开始抽签'}}
+    </button>
+  </view>
 
-    <view class="draw-area" wx:else>
-      <view class="draw-hint">点击下方按钮开始抽签</view>
-    </view>
+  <view class="options-preview">
+    <view class="preview-title">{{displayMode === 'wheel' ? '转盘选项' : '选项列表'}}</view>
+    <scroll-view class="preview-list" scroll-y>
+      <view class="preview-item" wx:for="{{options}}" wx:key="index">
+        <view class="preview-dot" style="background: {{item.color || '#667eea'}}"></view>
+        <view class="preview-name">{{item.name}}</view>
+        <view class="preview-weight" wx:if="{{item.weight && displayMode === 'list'}}">权重: {{item.weight || 1}}</view>
+      </view>
+    </scroll-view>
   </view>
 
   <view class="actions">
     <button class="share-btn" open-type="share" size="default">
       分享给好友
     </button>
-    <button class="draw-btn" bindtap="startDraw" disabled="{{isDrawing}}">
-      {{isDrawing ? '抽签中...' : '开始抽签'}}
-    </button>
+  </view>
+
+  <view class="qrcode-section">
+    <image class="qrcode-image" src="/images/qrcode.jpg" mode="aspectFit"></image>
+    <view class="qrcode-text">扫码关注公众号</view>
   </view>
 
   <view class="creator">
     由 {{creator}} 创建
+  </view>
+</view>
+
+<!-- 结果弹出框 - 只在圆盘模式下使用 -->
+<view class="modal-mask" wx:if="{{showResult && displayMode === 'wheel'}}" bindtap="closeResult">
+  <view class="modal-content" catchtap>
+    <view class="close-icon-btn" catchtap="closeResult">✕</view>
+    <view class="result-header">
+      <view class="result-background-icon">🎡</view>
+      <view class="result-title-light">转盘抽签</view>
+    </view>
+    <view class="result-value-container">
+      <view class="result-icon-large">🎉</view>
+      <view class="result-text">{{result}}</view>
+    </view>
+    <view class="result-actions">
+      <button class="retry-btn" catchtap="spinWheel">🔄 再来一次</button>
+    </view>
   </view>
 </view>

@@ -47,7 +47,9 @@ Page({
       ] }
     ],
     showResult: false,
-    result: ''
+    result: '',
+    resultIcon: '',
+    currentPreset: {}
   },
 
   goToCustom() {
@@ -83,26 +85,50 @@ Page({
     const preset = this.data.quickPresets.find(p => p.id === id)
 
     if (preset && preset.options) {
-      // 随机选择
-      const randomIndex = Math.floor(Math.random() * preset.options.length)
-      const result = preset.options[randomIndex]
-
       this.setData({
-        result: result.name,
-        showResult: true
+        currentPreset: preset
       })
-
-      // 震动反馈
-      wx.vibrateShort({
-        type: 'heavy'
-      })
+      this.startDraw()
     }
+  },
+
+  startDraw() {
+    const { currentPreset } = this.data
+    const options = currentPreset.options
+
+    if (options.length < 2) {
+      wx.showToast({
+        title: '选项不足',
+        icon: 'none'
+      })
+      return
+    }
+
+    // 随机选择并显示结果
+    const randomIndex = Math.floor(Math.random() * options.length)
+    const result = options[randomIndex]
+
+    this.setData({
+      result: result.name,
+      resultIcon: result.icon,
+      showResult: true
+    })
+
+    wx.vibrateShort({
+      type: 'heavy'
+    })
+  },
+
+  retryDraw() {
+    this.startDraw()
   },
 
   closeResult() {
     this.setData({
       showResult: false,
-      result: ''
+      result: '',
+      resultIcon: '',
+      currentPreset: {}
     })
   },
 

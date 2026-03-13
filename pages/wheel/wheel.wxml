@@ -15,9 +15,9 @@
       <view class="tip">点击下方转盘开始抽奖</view>
     </view>
 
-    <view class="wheel-container">
-      <canvas type="2d" id="wheelCanvas" class="wheel-canvas"></canvas>
-      <view class="wheel-pointer" bindtap="spinWheel">
+    <view class="wheel-container {{showResult ? 'modal-open' : ''}}">
+      <canvas type="2d" id="wheelCanvas" class="wheel-canvas" style="{{showResult ? 'opacity: 0; visibility: hidden;' : ''}}"></canvas>
+      <view class="wheel-pointer" bindtap="spinWheel" style="{{showResult ? 'opacity: 0; visibility: hidden;' : ''}}">
         <view class="pointer-text">{{isSpinning ? '点击停止' : '开始'}}</view>
       </view>
     </view>
@@ -35,17 +35,33 @@
         </view>
       </scroll-view>
     </view>
-
-    <view class="result-section" wx:if="{{showResult}}">
-      <view class="result-title">🎉 转盘结果</view>
-      <view class="result-icon" wx:if="{{resultIcon}}">{{resultIcon}}</view>
-      <view class="result-value">{{result}}</view>
-      <button class="close-result-btn" bindtap="closeResult" size="mini">关闭</button>
-    </view>
   </view>
 
   <view class="actions">
     <button class="reset-btn" bindtap="resetWheel">重置转盘</button>
     <button class="share-btn" bindtap="shareWheel" disabled="{{options.length < 2}}">分享转盘</button>
+  </view>
+
+  <view class="qrcode-section">
+    <image class="qrcode-image" src="/images/qrcode.jpg" mode="aspectFit"></image>
+    <view class="qrcode-text">扫码关注公众号</view>
+  </view>
+</view>
+
+<!-- 结果弹出框 - 移到container外面 -->
+<view class="modal-mask" wx:if="{{showResult}}" bindtap="closeResult">
+  <view class="modal-content" catchtap>
+    <view class="close-icon-btn" catchtap="closeResult">✕</view>
+    <view class="result-header">
+      <view class="result-background-icon">🎡</view>
+      <view class="result-title-light">转盘抽签</view>
+    </view>
+    <view class="result-value-container">
+      <view class="result-icon-large">🎉</view>
+      <view class="result-text">{{result}}</view>
+    </view>
+    <view class="result-actions">
+      <button class="retry-btn" catchtap="spinWheel">🔄 再来一次</button>
+    </view>
   </view>
 </view>
