@@ -95,16 +95,16 @@ Page({
         name: '幸运数字',
         icon: '🔢',
         options: [
-          { name: '1', icon: '💎' },
-          { name: '2', icon: '🌟' },
-          { name: '3', icon: '🌈' },
-          { name: '4', icon: '🍀' },
-          { name: '5', icon: '🌸' },
-          { name: '6', icon: '🎀' },
-          { name: '7', icon: '🌺' },
-          { name: '8', icon: '🦋' },
-          { name: '9', icon: '🎆' },
-          { name: '10', icon: '🎇' }
+          { name: '1', icon: '1️⃣' },
+          { name: '2', icon: '2️⃣' },
+          { name: '3', icon: '3️⃣' },
+          { name: '4', icon: '4️⃣' },
+          { name: '5', icon: '5️⃣' },
+          { name: '6', icon: '6️⃣' },
+          { name: '7', icon: '7️⃣' },
+          { name: '8', icon: '8️⃣' },
+          { name: '9', icon: '9️⃣' },
+          { name: '10', icon: '🔟' }
         ]
       },
       {
