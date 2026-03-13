@@ -48,9 +48,10 @@ Page({
     if (preset && preset.options) {
       // 随机选择
       const randomIndex = Math.floor(Math.random() * preset.options.length)
+      const result = preset.options[randomIndex]
 
       this.setData({
-        result: preset.options[randomIndex],
+        result: result.name,
         showResult: true
       })
 

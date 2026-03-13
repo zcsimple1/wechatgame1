@@ -58,7 +58,6 @@
       <view class="result-icon">🎉</view>
       <view class="result-title">抽签结果</view>
       <view class="result-value">{{result}}</view>
-      <button class="result-btn" bindtap="closeResult">确定</button>
     </view>
   </view>
 </view>
