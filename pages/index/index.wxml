@@ -1,47 +1,56 @@
 <!--pages/index/index.wxml-->
 <view class="container">
-  <view class="title">🎲 幸运抽签</view>
+  <view class="header">
+    <view class="title">🎲 幸运抽签</view>
+    <view class="subtitle">选择你喜欢的抽签方式</view>
+  </view>
 
   <view class="content">
-    <view class="section">
-      <view class="section-title">添加选项</view>
-      <view class="input-row">
-        <input class="option-input" placeholder="输入选项名称" value="{{newOption}}" bindinput="onOptionInput" />
-        <input class="weight-input" type="number" placeholder="权重(可选)" value="{{newWeight}}" bindinput="onWeightInput" />
-        <button class="add-btn" bindtap="addOption" size="mini">添加</button>
+    <view class="card-grid">
+      <!-- 自定义抽签 -->
+      <view class="card" bindtap="goToCustom">
+        <view class="card-icon">✏️</view>
+        <view class="card-title">自定义抽签</view>
+        <view class="card-desc">自由添加选项，设置权重</view>
+        <view class="card-arrow">→</view>
       </view>
-      <view class="tip">权重为空时默认为1，权重越大被抽中概率越高</view>
+
+      <!-- 转盘抽签 -->
+      <view class="card" bindtap="goToWheel">
+        <view class="card-icon">🎡</view>
+        <view class="card-title">转盘抽签</view>
+        <view class="card-desc">旋转转盘，刺激有趣</view>
+        <view class="card-arrow">→</view>
+      </view>
+
+      <!-- 预设抽签 -->
+      <view class="card" bindtap="goToPreset">
+        <view class="card-icon">⭐</view>
+        <view class="card-title">热门预设</view>
+        <view class="card-desc">精选模板，快速使用</view>
+        <view class="card-arrow">→</view>
+      </view>
     </view>
 
-    <view class="section">
-      <view class="section-title">
-        选项列表 (共 {{options.length}} 个)
-      </view>
-      <scroll-view class="options-list" scroll-y>
-        <view class="option-item" wx:for="{{options}}" wx:key="index">
-          <view class="option-index">{{index + 1}}</view>
-          <view class="option-name">{{item.name}}</view>
-          <view class="option-weight">权重: {{item.weight || 1}}</view>
-          <view class="option-probability">概率: {{item.probability}}%</view>
-          <view class="delete-btn" bindtap="deleteOption" data-index="{{index}}">✕</view>
-        </view>
-        <view wx:if="{{options.length === 0}}" class="empty-tip">
-          请添加至少2个选项
+    <!-- 快速入口 -->
+    <view class="quick-actions">
+      <view class="section-title">快速开始</view>
+      <scroll-view class="preset-list" scroll-x>
+        <view class="preset-item" wx:for="{{quickPresets}}" wx:key="id" bindtap="quickDraw" data-id="{{item.id}}">
+          <view class="preset-icon">{{item.icon}}</view>
+          <view class="preset-name">{{item.name}}</view>
         </view>
       </scroll-view>
     </view>
-
-    <view class="result-section" wx:if="{{showResult}}">
-      <view class="result-title">🎉 抽签结果</view>
-      <view class="result-value">{{result}}</view>
-      <button class="close-result-btn" bindtap="closeResult" size="mini">关闭</button>
-    </view>
   </view>
 
-  <view class="actions">
-    <button class="share-btn" bindtap="sharePage" disabled="{{options.length < 2}}">生成分享页</button>
-    <button class="draw-btn" bindtap="startDraw" disabled="{{isDrawing || options.length < 2}}" loading="{{isDrawing}}">
-      {{isDrawing ? '抽签中...' : '开始抽签'}}
-    </button>
+  <!-- 抽签结果弹窗 -->
+  <view class="modal-mask" wx:if="{{showResult}}" bindtap="closeResult">
+    <view class="modal-content" catchtap>
+      <view class="result-icon">🎉</view>
+      <view class="result-title">抽签结果</view>
+      <view class="result-value">{{result}}</view>
+      <button class="result-btn" bindtap="closeResult">确定</button>
+    </view>
   </view>
 </view>

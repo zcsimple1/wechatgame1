@@ -1,6 +1,9 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/custom/custom",
+    "pages/wheel/wheel",
+    "pages/preset/preset",
     "pages/share/share"
   ],
   "window": {

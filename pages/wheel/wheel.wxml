@@ -1,0 +1,50 @@
+<!--pages/wheel/wheel.wxml-->
+<view class="container">
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">← 返回</view>
+    <view class="title">🎡 转盘抽签</view>
+  </view>
+
+  <view class="content">
+    <view class="section">
+      <view class="section-title">添加转盘选项</view>
+      <view class="input-row">
+        <input class="option-input" placeholder="输入选项名称" value="{{newOption}}" bindinput="onOptionInput" />
+        <button class="add-btn" bindtap="addOption" size="mini">添加</button>
+      </view>
+      <view class="tip">点击下方转盘开始抽奖</view>
+    </view>
+
+    <view class="wheel-container">
+      <canvas type="2d" id="wheelCanvas" class="wheel-canvas"></canvas>
+      <view class="wheel-pointer" bindtap="spinWheel">
+        <view class="pointer-text">开始</view>
+      </view>
+    </view>
+
+    <view class="options-section">
+      <view class="section-title">当前选项 ({{options.length}}个)</view>
+      <scroll-view class="options-list" scroll-y>
+        <view class="option-item" wx:for="{{options}}" wx:key="index">
+          <view class="option-dot" style="background: {{item.color}}"></view>
+          <view class="option-name">{{item.name}}</view>
+          <view class="delete-btn" bindtap="deleteOption" data-index="{{index}}">✕</view>
+        </view>
+        <view wx:if="{{options.length === 0}}" class="empty-tip">
+          请添加至少2个选项
+        </view>
+      </scroll-view>
+    </view>
+
+    <view class="result-section" wx:if="{{showResult}}">
+      <view class="result-title">🎉 转盘结果</view>
+      <view class="result-value">{{result}}</view>
+      <button class="close-result-btn" bindtap="closeResult" size="mini">关闭</button>
+    </view>
+  </view>
+
+  <view class="actions">
+    <button class="reset-btn" bindtap="resetWheel">重置转盘</button>
+    <button class="share-btn" bindtap="shareWheel" disabled="{{options.length < 2}}">分享转盘</button>
+  </view>
+</view>

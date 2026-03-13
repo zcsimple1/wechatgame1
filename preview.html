@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>幸运抽签 - 界面预览</title>
+  <title>幸运抽签 - 完整版预览</title>
   <style>
     * {
       margin: 0;
@@ -17,22 +17,45 @@
       max-width: 480px;
       margin: 0 auto;
       min-height: 100vh;
+      background: #f0f0f0;
     }
 
-    .container {
+    .phone-frame {
       min-height: 100vh;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .page {
+      display: none;
       padding: 20px;
+      min-height: 100vh;
       box-sizing: border-box;
     }
 
-    .title {
+    .page.active {
+      display: block;
+    }
+
+    /* 首页样式 */
+    .header {
       text-align: center;
-      font-size: 30px;
+      margin-bottom: 25px;
+      padding-top: 20px;
+    }
+
+    .title {
+      font-size: 36px;
       font-weight: bold;
       color: #fff;
-      margin-bottom: 20px;
+      margin-bottom: 8px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
     }
 
     .content {
@@ -43,8 +66,42 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
 
-    .section {
-      margin-bottom: 15px;
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border-radius: 10px;
+      padding: 15px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .card:active {
+      transform: scale(0.98);
+    }
+
+    .card-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: #666;
     }
 
     .section-title {
@@ -53,9 +110,52 @@
       color: #333;
       margin-bottom: 10px;
       padding-bottom: 8px;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 2px solid #e0e0e0;
     }
 
+    .preset-list {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .preset-item {
+      flex: 0 0 auto;
+      width: 90px;
+      text-align: center;
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .preset-item:active {
+      transform: scale(0.95);
+    }
+
+    .preset-icon {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .preset-name {
+      font-size: 12px;
+      color: #333;
+    }
+
+    /* 返回按钮 */
+    .back-btn {
+      color: #fff;
+      font-size: 16px;
+      padding: 5px 0;
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    /* 自定义抽签页面 */
     .input-row {
       display: flex;
       align-items: center;
@@ -91,11 +191,6 @@
       border-radius: 6px;
       font-size: 14px;
       cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .add-btn:hover {
-      background: #45a049;
     }
 
     .tip {
@@ -106,6 +201,7 @@
 
     .options-list {
       max-height: 200px;
+      overflow-y: auto;
     }
 
     .option-item {
@@ -206,10 +302,12 @@
     .actions {
       display: flex;
       gap: 10px;
+      margin-top: 15px;
     }
 
     .share-btn,
-    .draw-btn {
+    .draw-btn,
+    .reset-btn {
       flex: 1;
       height: 45px;
       line-height: 45px;
@@ -218,7 +316,7 @@
       font-weight: bold;
       border: none;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
     }
 
     .share-btn {
@@ -227,24 +325,236 @@
       border: 1px solid #667eea;
     }
 
-    .share-btn:hover {
-      background: #f8f9fa;
-    }
-
     .draw-btn {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #fff;
       box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
     }
 
-    .draw-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    .reset-btn {
+      background: #fff;
+      color: #666;
+      border: 1px solid #ddd;
     }
 
     button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+
+    /* 转盘样式 */
+    .wheel-container {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      margin: 20px auto;
+    }
+
+    #wheelCanvas {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+    }
+
+    .wheel-pointer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      z-index: 10;
+    }
+
+    .wheel-pointer:active {
+      transform: translate(-50%, -50%) scale(0.95);
+    }
+
+    .pointer-text {
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    /* 预设页面样式 */
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 5px;
+    }
+
+    .tab {
+      padding: 8px 15px;
+      background: #f0f0f0;
+      border-radius: 15px;
+      font-size: 13px;
+      color: #666;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .preset-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .preset-card:active {
+      transform: scale(0.98);
+    }
+
+    .preset-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .preset-card .preset-icon {
+      font-size: 24px;
+      margin-right: 8px;
+    }
+
+    .preset-name {
+      flex: 1;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .preset-arrow {
+      font-size: 16px;
+      color: #999;
+    }
+
+    .preset-tags {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      background: #e9ecef;
+      border-radius: 10px;
+      font-size: 11px;
+      color: #666;
+    }
+
+    .tag.more {
+      background: #667eea;
+      color: #fff;
+    }
+
+    /* 弹窗样式 */
+    .modal-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-mask.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px 20px;
+      text-align: center;
+      margin: 20px;
+      animation: modalPop 0.3s ease;
+    }
+
+    @keyframes modalPop {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .result-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .modal-result-title {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .retry-btn,
+    .confirm-btn {
+      flex: 1;
+      height: 40px;
+      line-height: 40px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    .retry-btn {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .confirm-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-top: 20px;
+    }
+
+    .nav-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
     }
 
     .preview-badge {
@@ -253,191 +563,537 @@
       right: 10px;
       background: rgba(0, 0, 0, 0.7);
       color: #fff;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-size: 10px;
       z-index: 1000;
     }
   </style>
 </head>
 <body>
   <div class="preview-badge">界面预览</div>
-  <div class="container">
-    <div class="title">🎲 幸运抽签</div>
+  <div class="phone-frame">
 
-    <div class="content">
-      <div class="section">
-        <div class="section-title">添加选项</div>
-        <div class="input-row">
-          <input class="option-input" placeholder="输入选项名称" id="optionInput" />
-          <input class="weight-input" type="number" placeholder="权重(可选)" id="weightInput" />
-          <button class="add-btn" onclick="addOption()">添加</button>
-        </div>
-        <div class="tip">权重为空时默认为1，权重越大被抽中概率越高</div>
+    <!-- 首页 -->
+    <div class="page active" id="page-home">
+      <div class="header">
+        <div class="title">🎲 幸运抽签</div>
+        <div class="subtitle">选择你喜欢的抽签方式</div>
       </div>
 
-      <div class="section">
-        <div class="section-title">
-          选项列表 (共 <span id="optionCount">0</span> 个)
-        </div>
-        <div class="options-list" id="optionsList">
-          <div class="empty-tip">
-            请添加至少2个选项
+      <div class="content">
+        <div class="card-grid">
+          <div class="card" onclick="showPage('custom')">
+            <div class="card-icon">✏️</div>
+            <div class="card-title">自定义抽签</div>
+            <div class="card-desc">自由添加选项，设置权重</div>
+          </div>
+
+          <div class="card" onclick="showPage('wheel')">
+            <div class="card-icon">🎡</div>
+            <div class="card-title">转盘抽签</div>
+            <div class="card-desc">旋转转盘，刺激有趣</div>
+          </div>
+
+          <div class="card" onclick="showPage('preset')">
+            <div class="card-icon">⭐</div>
+            <div class="card-title">热门预设</div>
+            <div class="card-desc">精选模板，快速使用</div>
           </div>
         </div>
-      </div>
 
-      <div class="result-section" id="resultSection" style="display: none;">
-        <div class="result-title">🎉 抽签结果</div>
-        <div class="result-value" id="resultValue"></div>
-        <button class="close-result-btn" onclick="closeResult()">关闭</button>
+        <div class="section-title">快速开始</div>
+        <div class="preset-list" id="quickPresets"></div>
       </div>
     </div>
 
-    <div class="actions">
-      <button class="share-btn" id="shareBtn" onclick="alert('此功能仅在小程序中可用')">生成分享页</button>
-      <button class="draw-btn" id="drawBtn" onclick="startDraw()">开始抽签</button>
+    <!-- 自定义抽签页面 -->
+    <div class="page" id="page-custom">
+      <div class="nav-bar">
+        <div class="back-btn" onclick="showPage('home')">← 返回</div>
+        <div class="nav-title">✏️ 自定义抽签</div>
+        <div style="width: 30px;"></div>
+      </div>
+
+      <div class="content">
+        <div class="section-title">添加选项</div>
+        <div class="input-row">
+          <input class="option-input" id="customOptionInput" placeholder="输入选项名称" />
+          <input class="weight-input" id="customWeightInput" type="number" placeholder="权重(可选)" />
+          <button class="add-btn" onclick="addCustomOption()">添加</button>
+        </div>
+        <div class="tip">权重为空时默认为1，权重越大被抽中概率越高</div>
+
+        <div class="section-title" style="margin-top: 20px;">选项列表</div>
+        <div class="options-list" id="customOptionsList">
+          <div class="empty-tip">请添加至少2个选项</div>
+        </div>
+
+        <div class="result-section" id="customResultSection" style="display: none;">
+          <div class="result-title">🎉 抽签结果</div>
+          <div class="result-value" id="customResultValue"></div>
+          <button class="close-result-btn" onclick="closeCustomResult()">关闭</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="share-btn" onclick="alert('此功能仅在小程序中可用')">生成分享页</button>
+        <button class="draw-btn" id="customDrawBtn" onclick="startCustomDraw()">开始抽签</button>
+      </div>
     </div>
+
+    <!-- 转盘抽签页面 -->
+    <div class="page" id="page-wheel">
+      <div class="nav-bar">
+        <div class="back-btn" onclick="showPage('home')">← 返回</div>
+        <div class="nav-title">🎡 转盘抽签</div>
+        <div style="width: 30px;"></div>
+      </div>
+
+      <div class="content">
+        <div class="section-title">添加转盘选项</div>
+        <div class="input-row">
+          <input class="option-input" id="wheelOptionInput" placeholder="输入选项名称" />
+          <button class="add-btn" onclick="addWheelOption()">添加</button>
+        </div>
+        <div class="tip">点击下方转盘开始抽奖</div>
+
+        <div class="wheel-container">
+          <canvas id="wheelCanvas" width="280" height="280"></canvas>
+          <div class="wheel-pointer" onclick="spinWheel()">
+            <span class="pointer-text">开始</span>
+          </div>
+        </div>
+
+        <div class="section-title">当前选项</div>
+        <div class="options-list" id="wheelOptionsList">
+          <div class="empty-tip">请添加至少2个选项</div>
+        </div>
+
+        <div class="result-section" id="wheelResultSection" style="display: none;">
+          <div class="result-title">🎉 转盘结果</div>
+          <div class="result-value" id="wheelResultValue"></div>
+          <button class="close-result-btn" onclick="closeWheelResult()">关闭</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="reset-btn" onclick="resetWheel()">重置转盘</button>
+        <button class="share-btn" id="wheelShareBtn" onclick="alert('此功能仅在小程序中可用')">分享转盘</button>
+      </div>
+    </div>
+
+    <!-- 预设抽签页面 -->
+    <div class="page" id="page-preset">
+      <div class="nav-bar">
+        <div class="back-btn" onclick="showPage('home')">← 返回</div>
+        <div class="nav-title">⭐ 热门预设</div>
+        <div style="width: 30px;"></div>
+      </div>
+
+      <div class="content">
+        <div class="category-tabs" id="categoryTabs"></div>
+        <div class="preset-list" id="presetList" style="flex-direction: column; gap: 10px; overflow-y: auto; max-height: 600px;"></div>
+      </div>
+    </div>
+
+    <!-- 结果弹窗 -->
+    <div class="modal-mask" id="resultModal">
+      <div class="modal-content">
+        <div class="result-icon">🎉</div>
+        <div class="result-title">抽签结果</div>
+        <div class="result-value" id="modalResultValue"></div>
+        <button class="confirm-btn" style="width: 100%; margin-top: 20px;" onclick="closeModal()">确定</button>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    let options = [];
-    let isDrawing = false;
+    // 页面切换
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
 
-    function addOption() {
-      const nameInput = document.getElementById('optionInput');
-      const weightInput = document.getElementById('weightInput');
+      if (page === 'wheel') {
+        setTimeout(drawWheel, 100);
+      }
+    }
 
-      const name = nameInput.value.trim();
-      const weight = weightInput.value ? parseInt(weightInput.value) : 1;
+    // 快速预设数据
+    const quickPresets = [
+      { id: 'yes-no', name: '是或否', icon: '❓', options: ['是', '否'] },
+      { id: 'lunch', name: '吃什么', icon: '🍜', options: ['火锅', '烧烤', '寿司', '披萨', '汉堡', '炒菜'] },
+      { id: 'weekend', name: '去哪玩', icon: '🎡', options: ['看电影', '逛街', '公园', '宅家', 'KTV', '运动'] },
+      { id: 'lucky', name: '幸运数字', icon: '🔢', options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+      { id: 'mood', name: '心情如何', icon: '😊', options: ['开心', '平静', '兴奋', '放松', '期待'] },
+      { id: 'color', name: '选个颜色', icon: '🎨', options: ['红色', '蓝色', '绿色', '黄色', '紫色'] }
+    ];
+
+    // 初始化快速预设
+    function initQuickPresets() {
+      const container = document.getElementById('quickPresets');
+      container.innerHTML = quickPresets.map(p => `
+        <div class="preset-item" onclick="quickDraw('${p.id}')">
+          <div class="preset-icon">${p.icon}</div>
+          <div class="preset-name">${p.name}</div>
+        </div>
+      `).join('');
+    }
+
+    // 快速抽签
+    function quickDraw(id) {
+      const preset = quickPresets.find(p => p.id === id);
+      if (preset) {
+        const result = preset.options[Math.floor(Math.random() * preset.options.length)];
+        showModalResult(result);
+      }
+    }
+
+    // 自定义抽签
+    let customOptions = [];
+
+    function addCustomOption() {
+      const name = document.getElementById('customOptionInput').value.trim();
+      const weight = document.getElementById('customWeightInput').value ? parseInt(document.getElementById('customWeightInput').value) : 1;
 
       if (!name) {
         alert('请输入选项名称');
         return;
       }
 
-      if (weight < 1) {
-        alert('权重必须大于等于1');
-        return;
-      }
-
-      options.push({
-        name: name,
-        weight: weight
-      });
-
-      nameInput.value = '';
-      weightInput.value = '';
-
-      renderOptions();
+      customOptions.push({ name, weight });
+      document.getElementById('customOptionInput').value = '';
+      document.getElementById('customWeightInput').value = '';
+      renderCustomOptions();
     }
 
-    function deleteOption(index) {
-      options.splice(index, 1);
-      renderOptions();
-    }
+    function renderCustomOptions() {
+      const container = document.getElementById('customOptionsList');
+      const btn = document.getElementById('customDrawBtn');
 
-    function calculateProbabilities() {
-      const totalWeight = options.reduce((sum, opt) => sum + opt.weight, 0);
-      options.forEach(opt => {
-        opt.probability = ((opt.weight / totalWeight) * 100).toFixed(1);
-      });
-    }
-
-    function renderOptions() {
-      calculateProbabilities();
-      const container = document.getElementById('optionsList');
-      const countSpan = document.getElementById('optionCount');
-      const drawBtn = document.getElementById('drawBtn');
-      const shareBtn = document.getElementById('shareBtn');
-
-      countSpan.textContent = options.length;
-      drawBtn.disabled = options.length < 2;
-      shareBtn.disabled = options.length < 2;
-
-      if (options.length === 0) {
+      if (customOptions.length === 0) {
         container.innerHTML = '<div class="empty-tip">请添加至少2个选项</div>';
+        btn.disabled = true;
         return;
       }
 
-      container.innerHTML = options.map((opt, index) => `
+      const totalWeight = customOptions.reduce((sum, opt) => sum + opt.weight, 0);
+      container.innerHTML = customOptions.map((opt, i) => `
         <div class="option-item">
-          <div class="option-index">${index + 1}</div>
+          <div class="option-index">${i + 1}</div>
           <div class="option-name">${opt.name}</div>
           <div class="option-weight">权重: ${opt.weight}</div>
-          <div class="option-probability">概率: ${opt.probability}%</div>
-          <button class="delete-btn" onclick="deleteOption(${index})">✕</button>
+          <div class="option-probability">概率: ${((opt.weight / totalWeight) * 100).toFixed(1)}%</div>
+          <button class="delete-btn" onclick="deleteCustomOption(${i})">✕</button>
         </div>
       `).join('');
+
+      btn.disabled = customOptions.length < 2;
     }
 
-    function startDraw() {
-      if (options.length < 2) {
+    function deleteCustomOption(index) {
+      customOptions.splice(index, 1);
+      renderCustomOptions();
+    }
+
+    function startCustomDraw() {
+      if (customOptions.length < 2) {
         alert('请至少添加2个选项');
         return;
       }
 
-      if (isDrawing) return;
-
-      isDrawing = true;
-      const drawBtn = document.getElementById('drawBtn');
-      const resultSection = document.getElementById('resultSection');
-      const resultValue = document.getElementById('resultValue');
-
-      drawBtn.textContent = '抽签中...';
-      drawBtn.disabled = true;
-      resultSection.style.display = 'block';
-
       let count = 0;
       const maxCount = 20;
+      const section = document.getElementById('customResultSection');
+      const value = document.getElementById('customResultValue');
 
+      section.style.display = 'block';
       const interval = setInterval(() => {
-        const randomIndex = Math.floor(Math.random() * options.length);
-        resultValue.textContent = options[randomIndex].name;
-
+        value.textContent = customOptions[Math.floor(Math.random() * customOptions.length)].name;
         count++;
         if (count >= maxCount) {
           clearInterval(interval);
-          finalDraw();
+          const totalWeight = customOptions.reduce((sum, opt) => sum + opt.weight, 0);
+          let random = Math.random() * totalWeight;
+          let result = '';
+          for (const opt of customOptions) {
+            random -= opt.weight;
+            if (random <= 0) {
+              result = opt.name;
+              break;
+            }
+          }
+          value.textContent = result;
         }
       }, 100);
     }
 
-    function finalDraw() {
-      const totalWeight = options.reduce((sum, opt) => sum + opt.weight, 0);
-      let random = Math.random() * totalWeight;
+    function closeCustomResult() {
+      document.getElementById('customResultSection').style.display = 'none';
+    }
 
-      let result = '';
-      for (const opt of options) {
-        random -= opt.weight;
-        if (random <= 0) {
-          result = opt.name;
-          break;
+    // 转盘抽签
+    let wheelOptions = [
+      { name: '选项1', color: '#FF6B6B' },
+      { name: '选项2', color: '#4ECDC4' },
+      { name: '选项3', color: '#45B7D1' },
+      { name: '选项4', color: '#96CEB4' }
+    ];
+    let wheelRotation = 0;
+
+    function addWheelOption() {
+      const name = document.getElementById('wheelOptionInput').value.trim();
+      if (!name) {
+        alert('请输入选项名称');
+        return;
+      }
+
+      if (wheelOptions.length >= 12) {
+        alert('最多添加12个选项');
+        return;
+      }
+
+      const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'];
+      wheelOptions.push({ name, color: colors[wheelOptions.length % colors.length] });
+      document.getElementById('wheelOptionInput').value = '';
+      renderWheelOptions();
+      drawWheel();
+    }
+
+    function renderWheelOptions() {
+      const container = document.getElementById('wheelOptionsList');
+      const shareBtn = document.getElementById('wheelShareBtn');
+
+      if (wheelOptions.length === 0) {
+        container.innerHTML = '<div class="empty-tip">请添加至少2个选项</div>';
+        shareBtn.disabled = true;
+        return;
+      }
+
+      container.innerHTML = wheelOptions.map((opt, i) => `
+        <div class="option-item">
+          <div class="option-dot" style="width: 20px; height: 20px; background: ${opt.color}; border-radius: 50%; margin-right: 10px;"></div>
+          <div class="option-name">${opt.name}</div>
+          <button class="delete-btn" onclick="deleteWheelOption(${i})">✕</button>
+        </div>
+      `).join('');
+
+      shareBtn.disabled = wheelOptions.length < 2;
+    }
+
+    function deleteWheelOption(index) {
+      wheelOptions.splice(index, 1);
+      renderWheelOptions();
+      drawWheel();
+    }
+
+    function drawWheel() {
+      const canvas = document.getElementById('wheelCanvas');
+      const ctx = canvas.getContext('2d');
+      const centerX = 140;
+      const centerY = 140;
+      const radius = 130;
+
+      if (wheelOptions.length < 2) {
+        ctx.clearRect(0, 0, 280, 280);
+        return;
+      }
+
+      const anglePerSlice = (2 * Math.PI) / wheelOptions.length;
+
+      ctx.clearRect(0, 0, 280, 280);
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.rotate(wheelRotation);
+      ctx.translate(-centerX, -centerY);
+
+      wheelOptions.forEach((option, index) => {
+        const startAngle = index * anglePerSlice;
+        const endAngle = (index + 1) * anglePerSlice;
+
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+
+        ctx.fillStyle = option.color;
+        ctx.fill();
+
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(startAngle + anglePerSlice / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText(option.name, radius - 10, 4);
+        ctx.restore();
+      });
+
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 10, 0, 2 * Math.PI);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY - radius - 15);
+      ctx.lineTo(centerX - 10, centerY - radius + 10);
+      ctx.lineTo(centerX + 10, centerY - radius + 10);
+      ctx.closePath();
+      ctx.fillStyle = '#ff6b6b';
+      ctx.fill();
+    }
+
+    function spinWheel() {
+      if (wheelOptions.length < 2) {
+        alert('请至少添加2个选项');
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * wheelOptions.length);
+      const anglePerSlice = (2 * Math.PI) / wheelOptions.length;
+      const targetAngle = randomIndex * anglePerSlice + anglePerSlice / 2;
+      const spins = 5 + Math.random() * 3;
+      const totalRotation = spins * 2 * Math.PI - targetAngle;
+
+      const duration = 3000;
+      const startTime = Date.now();
+      const startRotation = wheelRotation;
+
+      function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        wheelRotation = startRotation + totalRotation * easeOut;
+        drawWheel();
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          const result = wheelOptions[randomIndex].name;
+          document.getElementById('wheelResultSection').style.display = 'block';
+          document.getElementById('wheelResultValue').textContent = result;
         }
       }
 
-      const resultValue = document.getElementById('resultValue');
-      const drawBtn = document.getElementById('drawBtn');
-
-      resultValue.textContent = result;
-
-      isDrawing = false;
-      drawBtn.textContent = '开始抽签';
-      drawBtn.disabled = false;
+      animate();
     }
 
-    function closeResult() {
-      const resultSection = document.getElementById('resultSection');
-      resultSection.style.display = 'none';
+    function closeWheelResult() {
+      document.getElementById('wheelResultSection').style.display = 'none';
     }
 
-    // 添加示例选项
-    options = [
-      { name: '麦当劳', weight: 1 },
-      { name: '肯德基', weight: 1 },
-      { name: '必胜客', weight: 2 }
+    function resetWheel() {
+      if (confirm('确定要清空所有选项吗？')) {
+        wheelOptions = [
+          { name: '选项1', color: '#FF6B6B' },
+          { name: '选项2', color: '#4ECDC4' },
+          { name: '选项3', color: '#45B7D1' },
+          { name: '选项4', color: '#96CEB4' }
+        ];
+        wheelRotation = 0;
+        renderWheelOptions();
+        drawWheel();
+        closeWheelResult();
+      }
+    }
+
+    // 预设抽签
+    const categories = [
+      { id: 'all', name: '全部' },
+      { id: 'decision', name: '决策' },
+      { id: 'food', name: '美食' },
+      { id: 'entertainment', name: '娱乐' },
+      { id: 'life', name: '生活' },
+      { id: 'game', name: '游戏' }
     ];
-    renderOptions();
+
+    const presets = [
+      { id: 'yes-no', category: 'decision', name: '是或否', icon: '❓', options: ['是', '否'] },
+      { id: 'yes-no-maybe', category: 'decision', name: '是或否或也许', icon: '❓', options: ['是', '否', '也许'] },
+      { id: 'lunch', category: 'food', name: '今天吃什么', icon: '🍜', options: ['火锅', '烧烤', '寿司', '披萨', '汉堡', '炒菜', '面食', '砂锅'] },
+      { id: 'drink', category: 'food', name: '喝什么', icon: '🥤', options: ['奶茶', '咖啡', '果汁', '苏打水', '可乐', '矿泉水'] },
+      { id: 'weekend', category: 'entertainment', name: '周末去哪玩', icon: '🎡', options: ['看电影', '逛街', '公园', '宅家', 'KTV', '运动', '爬山', '桌游'] },
+      { id: 'movie', category: 'entertainment', name: '看什么电影', icon: '🎬', options: ['动作片', '喜剧片', '恐怖片', '科幻片', '爱情片', '纪录片'] },
+      { id: 'lucky-number', category: 'game', name: '幸运数字', icon: '🔢', options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+      { id: 'dice', category: 'game', name: '掷骰子', icon: '🎲', options: ['1点', '2点', '3点', '4点', '5点', '6点'] },
+      { id: 'mood', category: 'life', name: '今天心情', icon: '😊', options: ['开心', '平静', '兴奋', '放松', '期待', '焦虑', '疲惫'] },
+      { id: 'color', category: 'life', name: '选个颜色', icon: '🎨', options: ['红色', '橙色', '黄色', '绿色', '蓝色', '紫色'] },
+      { id: 'gift', category: 'life', name: '送什么礼物', icon: '🎁', options: ['鲜花', '巧克力', '香水', '手表', '项链', '书籍'] },
+      { id: 'exercise', category: 'entertainment', name: '做什么运动', icon: '🏃', options: ['跑步', '游泳', '瑜伽', '健身', '篮球', '羽毛球', '骑行'] },
+      { id: 'snack', category: 'food', name: '吃什么零食', icon: '🍪', options: ['薯片', '饼干', '糖果', '坚果', '果干', '巧克力'] },
+      { id: 'tea', category: 'food', name: '喝什么茶', icon: '🍵', options: ['红茶', '绿茶', '乌龙茶', '花茶', '普洱茶', '白茶'] }
+    ];
+
+    let currentCategory = 'all';
+
+    function initPresets() {
+      const tabsContainer = document.getElementById('categoryTabs');
+      tabsContainer.innerHTML = categories.map(cat => `
+        <div class="tab ${cat.id === currentCategory ? 'active' : ''}" onclick="switchCategory('${cat.id}')">${cat.name}</div>
+      `).join('');
+
+      renderPresets();
+    }
+
+    function switchCategory(id) {
+      currentCategory = id;
+      initPresets();
+    }
+
+    function renderPresets() {
+      const container = document.getElementById('presetList');
+      let filtered = presets;
+
+      if (currentCategory !== 'all') {
+        filtered = presets.filter(p => p.category === currentCategory);
+      }
+
+      container.innerHTML = filtered.map(p => `
+        <div class="preset-card" onclick="selectPreset('${p.id}')">
+          <div class="preset-header">
+            <div class="preset-icon">${p.icon}</div>
+            <div class="preset-name">${p.name}</div>
+            <div class="preset-arrow">→</div>
+          </div>
+          <div class="preset-tags">
+            ${p.options.slice(0, 4).map(opt => `<span class="tag">${opt}</span>`).join('')}
+            ${p.options.length > 4 ? `<span class="tag more">+${p.options.length - 4}</span>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectPreset(id) {
+      const preset = presets.find(p => p.id === id);
+      if (preset) {
+        const result = preset.options[Math.floor(Math.random() * preset.options.length)];
+        showModalResult(result);
+      }
+    }
+
+    // 结果弹窗
+    function showModalResult(result) {
+      document.getElementById('modalResultValue').textContent = result;
+      document.getElementById('resultModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('resultModal').classList.remove('show');
+    }
+
+    // 初始化
+    initQuickPresets();
+    renderCustomOptions();
+    renderWheelOptions();
+    drawWheel();
+    initPresets();
   </script>
 </body>
 </html>

@@ -1,163 +1,54 @@
 // pages/index/index.js
 Page({
   data: {
-    options: [],
-    newOption: '',
-    newWeight: '',
-    isDrawing: false,
+    quickPresets: [
+      { id: 'yes-no', name: '是或否', icon: '❓', options: ['是', '否'] },
+      { id: 'lunch', name: '吃什么', icon: '🍜', options: ['火锅', '烧烤', '寿司', '披萨', '汉堡', '炒菜'] },
+      { id: 'weekend', name: '去哪玩', icon: '🎡', options: ['看电影', '逛街', '公园', '宅家', 'KTV', '运动'] },
+      { id: 'lucky', name: '幸运数字', icon: '🔢', options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+      { id: 'mood', name: '心情如何', icon: '😊', options: ['开心', '平静', '兴奋', '放松', '期待'] },
+      { id: 'color', name: '选个颜色', icon: '🎨', options: ['红色', '蓝色', '绿色', '黄色', '紫色'] }
+    ],
     showResult: false,
     result: ''
   },
 
-  onLoad() {
-    // 恢复上次保存的选项
-    const savedOptions = wx.getStorageSync('drawOptions')
-    if (savedOptions && savedOptions.length > 0) {
+  goToCustom() {
+    wx.navigateTo({
+      url: '/pages/custom/custom'
+    })
+  },
+
+  goToWheel() {
+    wx.navigateTo({
+      url: '/pages/wheel/wheel'
+    })
+  },
+
+  goToPreset() {
+    wx.navigateTo({
+      url: '/pages/preset/preset'
+    })
+  },
+
+  quickDraw(e) {
+    const id = e.currentTarget.dataset.id
+    const preset = this.data.quickPresets.find(p => p.id === id)
+
+    if (preset && preset.options) {
+      // 随机选择
+      const randomIndex = Math.floor(Math.random() * preset.options.length)
+
       this.setData({
-        options: savedOptions
-      })
-      this.calculateProbabilities()
-    }
-  },
-
-  onOptionInput(e) {
-    this.setData({
-      newOption: e.detail.value
-    })
-  },
-
-  onWeightInput(e) {
-    this.setData({
-      newWeight: e.detail.value
-    })
-  },
-
-  addOption() {
-    if (!this.data.newOption.trim()) {
-      wx.showToast({
-        title: '请输入选项名称',
-        icon: 'none'
-      })
-      return
-    }
-
-    const weight = this.data.newWeight ? parseInt(this.data.newWeight) : 1
-    if (weight < 1) {
-      wx.showToast({
-        title: '权重必须大于等于1',
-        icon: 'none'
-      })
-      return
-    }
-
-    const options = [...this.data.options, {
-      name: this.data.newOption.trim(),
-      weight: weight,
-      probability: 0
-    }]
-
-    this.setData({
-      options,
-      newOption: '',
-      newWeight: ''
-    })
-
-    this.calculateProbabilities()
-    this.saveOptions()
-
-    wx.showToast({
-      title: '添加成功',
-      icon: 'success'
-    })
-  },
-
-  deleteOption(e) {
-    const index = e.currentTarget.dataset.index
-    const options = this.data.options.filter((_, i) => i !== index)
-
-    this.setData({
-      options
-    })
-
-    this.calculateProbabilities()
-    this.saveOptions()
-  },
-
-  calculateProbabilities() {
-    const options = this.data.options
-    if (options.length === 0) return
-
-    const totalWeight = options.reduce((sum, opt) => sum + (opt.weight || 1), 0)
-
-    const optionsWithProb = options.map(opt => ({
-      ...opt,
-      probability: ((opt.weight || 1) / totalWeight * 100).toFixed(1)
-    }))
-
-    this.setData({
-      options: optionsWithProb
-    })
-  },
-
-  saveOptions() {
-    wx.setStorageSync('drawOptions', this.data.options)
-  },
-
-  startDraw() {
-    if (this.data.options.length < 2) {
-      wx.showToast({
-        title: '请至少添加2个选项',
-        icon: 'none'
-      })
-      return
-    }
-
-    this.setData({
-      isDrawing: true,
-      showResult: false
-    })
-
-    // 动画效果 - 快速切换选项
-    let count = 0
-    const maxCount = 20
-    const interval = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * this.data.options.length)
-      this.setData({
-        result: this.data.options[randomIndex].name
+        result: preset.options[randomIndex],
+        showResult: true
       })
 
-      count++
-      if (count >= maxCount) {
-        clearInterval(interval)
-        this.finalDraw()
-      }
-    }, 100)
-  },
-
-  finalDraw() {
-    // 根据权重随机选择
-    const totalWeight = this.data.options.reduce((sum, opt) => sum + (opt.weight || 1), 0)
-    let random = Math.random() * totalWeight
-
-    let result = ''
-    for (const opt of this.data.options) {
-      random -= (opt.weight || 1)
-      if (random <= 0) {
-        result = opt.name
-        break
-      }
+      // 震动反馈
+      wx.vibrateShort({
+        type: 'heavy'
+      })
     }
-
-    this.setData({
-      isDrawing: false,
-      showResult: true,
-      result
-    })
-
-    // 震动反馈
-    wx.vibrateShort({
-      type: 'heavy'
-    })
   },
 
   closeResult() {
@@ -167,25 +58,9 @@ Page({
     })
   },
 
-  sharePage() {
-    if (this.data.options.length < 2) {
-      wx.showToast({
-        title: '请至少添加2个选项',
-        icon: 'none'
-      })
-      return
-    }
-
-    // 将选项信息编码后跳转到分享页
-    const optionsData = JSON.stringify(this.data.options)
-    wx.navigateTo({
-      url: `/pages/share/share?options=${encodeURIComponent(optionsData)}`
-    })
-  },
-
   onShareAppMessage() {
     return {
-      title: '快来试试这个抽签小程序！',
+      title: '幸运抽签小程序 - 多种抽签方式等你来',
       path: '/pages/index/index'
     }
   }
